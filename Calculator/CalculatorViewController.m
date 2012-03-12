@@ -27,23 +27,29 @@
 
 - (IBAction)digitPressed:(UIButton *)sender {
     NSString *digit = sender.currentTitle;
+    NSRange range = [self.display.text rangeOfString:@"."];
     //%@ means print the parameter after the "" string; @ means the param is an object
     //NSLog(@"digit pressed = %@", digit);
     if (self.userIsInTheMiddleOfEnteringANumber) {
-        NSRange range = [digit rangeOfString:@"."];
-        if (digit == @".") {
+        // Is the user entering a decimal?
+        NSLog(@"Digit pressed: %@", digit);
+        if ([digit isEqualToString:@"."]) {
+            // Has the user already entered a decimal?
+            NSLog(@"Range length: %@", NSStringFromRange(range));
             if (range.length > 0) {
-                NSLog(@"Range collected: %@", NSStringFromRange(range));
+                NSLog(@"Do nothing");
+            } else {
                 self.display.text = [self.display.text stringByAppendingString:digit];
+                NSLog(@"Adding the digit to the display");
             }
+        } else {
+            self.display.text = [self.display.text stringByAppendingString:digit];
+            NSLog(@"Not a decimal, simply adding it");
         }
-        //self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
-        NSRange range = [digit rangeOfString:@"."];
-        if (range.location == NSNotFound) {
-            self.display.text = digit;
-            self.userIsInTheMiddleOfEnteringANumber = YES;
-        }
+        self.display.text = digit;
+        self.userIsInTheMiddleOfEnteringANumber = YES;
+        NSLog(@"This is the first digit press %@", digit);
     }
 }
 
